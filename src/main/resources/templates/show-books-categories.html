@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js">
+  </script>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+  <title>Book Categories</title>
+  <style>
+    body{
+      background-image: url("https://tailwindcss.com/_next/static/media/docs-dark@tinypng.1bbe175e.png");
+    }
+    </style>
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="/books/paginate/1">Books<span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+      <a th:href="@{'/books/showBooksByCategory'}" class="nav-link">Show books by category</a>
+    </li>
+    <li class="nav-item">
+      <th:block th:if="${session.user} != null">
+        <a th:href="@{'/logout'}" class="btn btn-link">Logout</a>
+      </th:block>
+      <th:block th:if="${session.user} == null">
+        <a th:href="@{'/login'}" class="btn btn-link">Login</a>
+      </th:block>
+    </li>
+  </ul>
+</nav>
+<body>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-sm-6">
+      <canvas id="bar-chart">
+      </canvas>
+    </div>
+  </div>
+</div>
+<script>
+   getData();
+   async function getData() {
+      const response = await fetch('http://localhost:8080/api/books');
+      const data = await response.json();
+      console.log(data);
+      length = data.length;
+      console.log(length);
+      labels = [];
+      values = [];
+      total=0;
+      for(i=0; i < length; i++){
+        total+=data[i].numOfBooks;
+      }
+      for (i = 0; i < length; i++) {
+         labels.push(data[i].category);
+         var percentage=(data[i].numOfBooks/total)*100;
+        
+         values.push(percentage);
+      }
+      new Chart(document.getElementById("bar-chart"), {
+         type: 'pie',
+         data: {
+            labels: labels,
+            datasets: [
+               {
+                  label: "Book category",
+                  backgroundColor: ["#3a90cd",
+                     "#8e5ea2",
+                     "#3bba9f",
+                     "#e8c3b9",
+                     "#c45850",
+                     "#CD9C5C",
+                     "#40E0D0"],
+                  data: values
+               }
+            ]
+         },
+         options: {
+            legend: { display: false },
+            title: {
+               display: true,
+               text: 'Books percentage by category'
+            }
+         }
+      });
+   }
+</script>
+</body>
+</html>

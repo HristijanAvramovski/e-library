@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <style>
+    body{
+      background-image: url("https://tailwindcss.com/_next/static/media/docs-dark@tinypng.1bbe175e.png");
+    }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/books/paginate/1">Books<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+            <a th:href="@{'/books/showBooksByCategory'}" class="nav-link">Show books by category</a>
+        </li>
+        <li class="nav-item">
+            <th:block th:if="${session.user} != null">
+            <a th:href="@{'/logout'}" class="btn btn-link">Logout</a>
+            </th:block>
+            <th:block th:if="${session.user} == null">
+                <a th:href="@{'/login'}" class="btn btn-link">Login</a>
+            </th:block>
+        </li>
+    </ul>
+</nav>
+
+<!-- Pills navs -->
+
+<!-- Pills content -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <form th:action="@{'/login/login1'}" th:method="post">
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="form2Example1">Username</label>
+                    <input type="text" id="form2Example1" name="username" class="form-control" />
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="form2Example2">Password</label>
+                    <input type="password" id="form2Example2" name="password" class="form-control" />
+                </div>
+
+                <!-- 2 column grid layout for inline styling -->
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+
+                <!-- Register buttons -->
+                <div class="text-center">
+                    <p>Not a member? <a href="/register">Register</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
